@@ -1,13 +1,9 @@
 package main
 
 import (
+	"github.com/olling/slog"
 	"errors"
 )
-
-
-type User struct {
-	Name string
-}
 
 type Queue struct {
 	Users []User
@@ -20,6 +16,7 @@ func (queue *Queue) AddUser (user User) {
 
 
 func (queue *Queue) GetUser (name string) (int, User) {
+	slog.PrintTrace("GetUser:",name)
 	for i,u := range queue.Users {
 		if u.Name == name {
 			return i,u
@@ -31,6 +28,7 @@ func (queue *Queue) GetUser (name string) (int, User) {
 
 
 func (queue *Queue) RemoveUser (user User) {
+	slog.PrintTrace("RemoveUser:",user)
 	for i,u := range queue.Users {
 		if u.Name == user.Name {
 			queue.Users = append(queue.Users[:i], queue.Users[i+1:]...)
@@ -38,6 +36,27 @@ func (queue *Queue) RemoveUser (user User) {
 	}
 }
 
+
+func (queue *Queue) MoveToBack (user User) {
+	slog.PrintTrace("MoveToBack:",user)
+	queue.RemoveUser(user)
+	queue.AddUser(user)
+}
+
+
+func (queue *Queue) MoveFirstToBack () {
+	slog.PrintTrace("MoveFirstToBack:")
+	if len(queue.Users) > 1 {
+		queue.MoveToBack(queue.Users[0])
+	}
+}
+
+func (queue *Queue) GetResponsible() (user User) {
+	if len(queue.Users) > 0 {
+		return queue.Users[0]
+	}
+	return user
+}
 
 func (queue *Queue) SwapUsers (user1 User,user2 User) (err error) {
 	ui1,_ :=  queue.GetUser(user1.Name)
@@ -52,3 +71,19 @@ func (queue *Queue) SwapUsers (user1 User,user2 User) (err error) {
 }
 
 
+func (queue *Queue) WriteToDisk (path string) {
+	WriteJsonFile(&queue, path)
+}
+
+func GetQueueFromDisk(path string) (queue Queue) {
+	ReadJsonFile(path,&queue)
+	return queue
+}
+
+func GetCurrentQueue() (queue Queue) {
+	return GetQueueFromDisk(CurrentConfiguration.PathJsonConfiguration)
+}
+
+func (queue *Queue) Write () {
+	queue.WriteToDisk(CurrentConfiguration.PathJsonConfiguration)
+}

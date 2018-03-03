@@ -2,42 +2,49 @@ package main
 
 
 import (
-	"fmt"
+
+	"github.com/olling/slog"
 )
 
+
+func GetNext () {
+	slog.PrintTrace("Func called: GetNext")
+	queue := GetCurrentQueue()
+	queue.MoveFirstToBack()
+	queue.Write()
+	//SendReminderBread(queue.GetResponsible())
+}
+
+func Remind () {
+	slog.PrintTrace("Func called: GetReminder")
+	//Send something about 
+}
+
+func BreadDate () {
+	slog.PrintTrace("Func called: GetBreadDate")
+	slog.PrintWarning("Remember to eat your bread!")
+}
+
+//sweaters := Inventory{"wool", 17}
+//tmpl, err := template.New("test").Parse("{{.Count}} items are made of {{.Material}}")
+//if err != nil { panic(err) }
+//err = tmpl.Execute(os.Stdout, sweaters)
+//if err != nil { panic(err) }
+
+
 func main() {
-	test()
+	InitializeConfiguration()
+	CurrentConfiguration.CronNext = "@every 100s"
+	InitializeCron()
+	NextDate()
+	InitializeWebinterface()
+
+
+//	slog.PrintInfo(CronNext.Entries()[0].Schedule)
+
 }
 
 func test () {
-	var user User
-	user.Name="user"
-	var user1 User
-	user1.Name="user1"
-	var user2 User
-	user2.Name="user2"
-	var user3 User
-	user3.Name="user3"
-	var user4 User
-	user4.Name="user4"
+	//slog.PrintTrace("Hello")
 
-	var q Queue
-	q.AddUser(user)
-	q.AddUser(user1)
-	q.AddUser(user2)
-	q.AddUser(user3)
-	q.AddUser(user4)
-
-	fmt.Println(q)
-	q.RemoveUser(user2)
-	fmt.Println(q)
-	q.SwapUsers(user1,user4)
-	fmt.Println(q)
-
-
-	WriteJsonFile(q,"/home/olling/jsontest.json")
-
-	var queue Queue
-	ReadJsonFile("/home/olling/jsontest.json",&queue)
-	fmt.Println(queue)
 }
