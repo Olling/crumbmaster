@@ -1,16 +1,14 @@
 package main
 
-
 import (
-	"github.com/robfig/cron"
 	"github.com/olling/slog"
+	"github.com/robfig/cron"
 )
-
 
 var (
 	cBreadDate = cron.New()
-	cRemind = cron.New()
-	cNextDate = cron.New()
+	cRemind    = cron.New()
+	cNextDate  = cron.New()
 )
 
 func InitializeCron() {
@@ -19,7 +17,7 @@ func InitializeCron() {
 	ReloadCron()
 }
 
-func NextDate () {
+func NextDate() {
 	slog.PrintInfo(cNextDate.Entries()[0].Schedule)
 }
 
@@ -31,14 +29,14 @@ func ReloadCron() {
 	cNextDate.Stop()
 
 	cBreadDate = cron.New()
-	cBreadDate.AddFunc(CurrentConfiguration.CronBreadDate,BreadDate)
+	cBreadDate.AddFunc(CurrentConfiguration.CronBreadDate, BreadDate)
 
 	cRemind = cron.New()
-	cRemind.AddFunc(CurrentConfiguration.CronRemind,Remind)
+	cRemind.AddFunc(CurrentConfiguration.CronRemind, Remind)
 
 	cNextDate = cron.New()
-	cNextDate.AddFunc(CurrentConfiguration.CronNext,GetNext)
-	slog.PrintTrace("cronneext",CurrentConfiguration.CronNext)
+	cNextDate.AddFunc(CurrentConfiguration.CronNext, GetNext)
+	slog.PrintTrace("cronneext", CurrentConfiguration.CronNext)
 
 	cBreadDate.Start()
 	cRemind.Start()
