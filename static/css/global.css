@@ -1,0 +1,11 @@
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+.header-layout {
+    height: 90px;
+    background-color: #e23838;
+    width: 100%;
+    vertical-align: middle;
+}
